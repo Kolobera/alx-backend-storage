@@ -1,5 +1,5 @@
--- SQL script that creates a table users
--- In and not out
+-- lists all bands with Glam rock as their main style
+--  ranked by their longevity
 select band_name,
 CASE
     WHEN split IS NULL then (2020 - formed)
