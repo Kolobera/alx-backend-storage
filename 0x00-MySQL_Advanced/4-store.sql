@@ -8,6 +8,6 @@ for each row
 begin
     update items
     set quantity = quantity - new.number
-    where name = new.name;
+    where name = new.item_name;
 end //
 delimiter ;
