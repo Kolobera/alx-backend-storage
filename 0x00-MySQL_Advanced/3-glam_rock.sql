@@ -2,7 +2,7 @@
 --  ranked by their longevity
 select band_name,
 CASE
-    WHEN split IS NULL then (2020 - formed)
+    WHEN split IS NULL then (2022 - formed)
     ELSE split - formed
 END AS lifespan
 FROM metal_bands
