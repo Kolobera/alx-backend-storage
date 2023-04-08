@@ -1,13 +1,14 @@
-
--- add one order
-SELECT * FROM items;
-SELECT * FROM orders;
-
-SELECT "--";
-
-INSERT INTO orders (item_name, number) VALUES ('item 1', 1);
+-- Add one bonus of an existing project
+SELECT * FROM users;
+SELECT * FROM projects;
+SELECT * FROM corrections;
 
 SELECT "--";
 
-SELECT * FROM items;
-SELECT * FROM orders;
+CALL AddBonus((SELECT id FROM users WHERE name = "user_1"), "project_2", 98);
+
+SELECT "--";
+
+SELECT * FROM users;
+SELECT * FROM projects;
+SELECT * FROM corrections;
