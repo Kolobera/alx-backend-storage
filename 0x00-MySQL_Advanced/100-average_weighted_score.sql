@@ -8,6 +8,6 @@ begin
     left join corrections on projects.id = corrections.project_id
     where corrections.user_id = user_id);
     update users 
-    set average_weighted_score = @average_weighted_score where id = user_id;
+    set average_score = @average_weighted_score where id = user_id;
 end //
 delimiter ;
