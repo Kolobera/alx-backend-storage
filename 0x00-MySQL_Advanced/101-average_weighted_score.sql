@@ -11,7 +11,7 @@ begin
         set @average_weighted_score = (select sum(score * weight) / sum(weight)
         from projects
         left join corrections on projects.id = corrections.project_id
-        where (select id from users limit i, 1));
+        where (select id from users limit i, 1) = corrections.user_id);
         update users
         set average_score = @average_weighted_score where id = (select id from users limit i, 1);
         set i = i + 1;
