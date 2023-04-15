@@ -1,2 +1,2 @@
 // Counnt docs in school collection
-db.school.count();
+db.school.find().count();
