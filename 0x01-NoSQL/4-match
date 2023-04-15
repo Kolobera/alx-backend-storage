@@ -1,0 +1,2 @@
+// List all docs with name="Holberton School" in school collection
+db.school.find({name: "Holberton School"}).forEach(printjson);

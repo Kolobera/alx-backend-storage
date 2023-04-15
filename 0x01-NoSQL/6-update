@@ -1,0 +1,6 @@
+// add attribue to the document
+db.school.update(
+    {name: "Holberton School"},
+    { $set: { "location": "SF" } },
+    { multi : true }
+);
