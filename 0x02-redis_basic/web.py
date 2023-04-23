@@ -8,22 +8,25 @@ from functools import wraps
 
 
 redis_store = redis.Redis()
+"""The Redis instance."""
 
 
 def data_cacher(method: Callable) -> Callable:
-    """Caches data from a particular URL.
-    """
+    '''Caches the output of fetched data.
+    '''
     @wraps(method)
-    def wrapper(url: str) -> str:
-        """Caches data from a particular URL.
-        """
-        if redis_store.get(url):
-            return redis_store.get(url).decode("utf-8")
-        else:
-            data = method(url)
-            redis_store.setex(url, 10, data)
-            return data
-    return wrapper
+    def invoker(url) -> str:
+        '''The wrapper function for caching the output.
+        '''
+        redis_store.incr(f'count:{url}')
+        result = redis_store.get(f'result:{url}')
+        if result:
+            return result.decode('utf-8')
+        result = method(url)
+        redis_store.set(f'count:{url}', 0)
+        redis_store.setex(f'result:{url}', 10, result)
+        return result
+    return invoker
 
 
 @data_cacher
