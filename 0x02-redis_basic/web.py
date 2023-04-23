@@ -7,29 +7,39 @@ from typing import Callable
 from functools import wraps
 
 
-redis_store = redis.Redis()
-"""The Redis instance."""
+r = redis.Redis()
 
 
-def data_cacher(method: Callable) -> Callable:
-    '''Caches the output of fetched data.
-    '''
+def count_requests(method: Callable) -> Callable:
+    """ * calculate nombre of request made by the server
+        * cache the response on the redis instance
+        * return the html from the cache if chache has not expired
+    """
+
     @wraps(method)
-    def invoker(url) -> str:
-        '''The wrapper function for caching the output.
-        '''
-        redis_store.incr(f'count:{url}')
-        result = redis_store.get(f'result:{url}')
-        if result:
-            return result.decode('utf-8')
-        result = method(url)
-        redis_store.set(f'count:{url}', 0)
-        redis_store.setex(f'result:{url}', 10, result)
-        return result
-    return invoker
+    def wrapper(url):
+        """ Wrapper for the decorated function """
+
+        # check if the cache has a copy of the page if yes,
+        # return the page from cache, otherwise make a new request
+        cached_html = r.get("cached_html:{}".format(url))
+        if cached_html:
+            return cached_html.decode('utf-8')
+
+        # track nombre of request made by the server to load html
+        r.incr("count:{}".format(url))
+
+        # make a new request
+        html = method(url)
+        # make  a new copy on the chache with 10 sec of expiration
+        r.setex("cached_html:{}".format(url), 10, html)
+
+        return html
+
+    return wrapper
 
 
-@data_cacher
+@count_requests
 def get_page(url: str) -> str:
     """Gets the HTML content of a particular URL.
     """
