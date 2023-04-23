@@ -2,6 +2,8 @@
 """Task 0's module.
 """
 import redis
+from uuid import uuid4
+from typing import Union, Callable, Optional
 
 
 class Cache:
@@ -13,9 +15,9 @@ class Cache:
         self._redis = redis.Redis()
         self._redis.flushdb()
 
-    def store(self, data) -> str:
+    def store(self, data: Union[str, bytes, int, float]) -> str:
         """Stores data in Redis using a random key.
         """
-        key = self._redis.randomkey()
+        key = str(uuid4())
         self._redis.set(key, data)
         return key
